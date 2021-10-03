@@ -1,0 +1,832 @@
+[gd_scene load_steps=26 format=2]
+
+[ext_resource path="res://scenes/stars/Star.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/Camera2D.gd" type="Script" id=2]
+[ext_resource path="res://assets/bg.png" type="Texture" id=3]
+[ext_resource path="res://scenes/Galaxy.gd" type="Script" id=4]
+[ext_resource path="res://assets/sheet.png" type="Texture" id=5]
+[ext_resource path="res://scenes/UI/CanvasLayer.gd" type="Script" id=6]
+[ext_resource path="res://scenes/UI/Readout.gd" type="Script" id=7]
+[ext_resource path="res://assets/fonts/MainFont.tres" type="DynamicFont" id=8]
+[ext_resource path="res://scenes/UI/SystemDetails.gd" type="Script" id=9]
+[ext_resource path="res://assets/fonts/Play-Regular.ttf" type="DynamicFontData" id=10]
+[ext_resource path="res://scenes/UI/BuildMenu.gd" type="Script" id=11]
+[ext_resource path="res://scenes/UI/InterstellarSelection.gd" type="Script" id=12]
+[ext_resource path="res://scenes/UI/ErrorLabel.gd" type="Script" id=13]
+[ext_resource path="res://scenes/UI/Dialogue.gd" type="Script" id=14]
+[ext_resource path="res://assets/sounds/alert.wav" type="AudioStream" id=15]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform float cutoff = 0.81f;
+
+void fragment(){
+//	if (distance(vec2(1.0, 0), UV) < val){
+//		COLOR.a = 0f;
+//	}
+//	vec4 color = COLOR.rgb;
+	if(UV.x < cutoff){
+		COLOR = texture(TEXTURE, UV);
+	}else{
+		COLOR = texture(SCREEN_TEXTURE, SCREEN_UV);
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/cutoff = 1.0
+
+[sub_resource type="Animation" id=3]
+resource_name = "swipe_in"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:material:shader_param/cutoff")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.81, 1.0 ]
+}
+
+[sub_resource type="DynamicFont" id=4]
+size = 30
+use_filter = true
+font_data = ExtResource( 10 )
+
+[sub_resource type="AtlasTexture" id=5]
+flags = 4
+atlas = ExtResource( 5 )
+region = Rect2( 896, 512, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=6]
+flags = 4
+atlas = ExtResource( 5 )
+region = Rect2( 1024, 512, 128, 128 )
+
+[sub_resource type="SpriteFrames" id=7]
+animations = [ {
+"frames": [ SubResource( 5 ), SubResource( 6 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="Animation" id=8]
+resource_name = "Fade"
+length = 2.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 0.9, 2.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 0.611765, 0.611765, 1 ), Color( 1, 0.611765, 0.611765, 1 ), Color( 1, 0.611765, 0.611765, 0 ) ]
+}
+
+[sub_resource type="Animation" id=9]
+resource_name = "Fade"
+length = 2.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 0.9, 2.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 0.611765, 0.611765, 1 ), Color( 1, 0.611765, 0.611765, 1 ), Color( 1, 0.611765, 0.611765, 0 ) ]
+}
+
+[sub_resource type="DynamicFont" id=10]
+size = 14
+use_filter = true
+font_data = ExtResource( 10 )
+
+[node name="Galaxy" type="Node2D" groups=[
+"galaxy",
+]]
+script = ExtResource( 4 )
+
+[node name="Stars" type="Node2D" parent="."]
+
+[node name="Star" parent="Stars" groups=[
+"start",
+] instance=ExtResource( 1 )]
+position = Vector2( 218, 162 )
+num_planets = 3
+owned_by = "player"
+star_name = "Primary"
+
+[node name="Star2" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 728, 120 )
+star_name = "Pleiades"
+
+[node name="Star3" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 606, 496 )
+star_name = "Vega"
+
+[node name="Star4" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 32, 424 )
+star_name = "Alpha"
+
+[node name="Star5" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 1061.57, 468.454 )
+star_name = "Amalthea"
+
+[node name="Star6" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 1136, -40 )
+star_name = "Delphini"
+
+[node name="Star7" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 656, -184 )
+star_name = "Capricorni"
+
+[node name="Star8" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 205.523, -171.462 )
+star_name = "Leonis"
+
+[node name="Star9" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( -336, -136 )
+star_name = "Ursae Majoris"
+
+[node name="Star10" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( -488, 280 )
+star_name = "Draconis "
+
+[node name="Star11" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( -272, 664 )
+star_name = "Ludumdaris"
+
+[node name="Star12" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 243.664, 873.169 )
+star_name = "Verytiredus"
+
+[node name="Star13" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 711.946, 811.72 )
+star_name = "Piscium "
+
+[node name="Star14" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 1188.7, 828.672 )
+star_name = "Draconis"
+
+[node name="Star15" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 1584, 288 )
+star_name = "Lyncis"
+
+[node name="Star16" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 1528, -152 )
+star_name = "Velorum "
+
+[node name="Star17" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 1232, -400 )
+star_name = "Aquilae "
+
+[node name="Star18" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( -112, -384 )
+star_name = "Persei "
+
+[node name="Star19" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( -632, -336 )
+star_name = "Scorpii "
+
+[node name="Star20" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( -664, 520 )
+star_name = "Orionis "
+
+[node name="Star21" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( -488, 1055 )
+star_name = "Arietis "
+
+[node name="Star22" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( -88, 928 )
+star_name = "Animus"
+
+[node name="Star23" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 608, 1096 )
+star_name = "Aurigae "
+
+[node name="Star24" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 1528, 624 )
+star_name = "Leonis"
+
+[node name="Star25" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 1128, 1096 )
+star_name = "Herculis "
+
+[node name="Star26" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 1712, 1136 )
+star_name = "Cygni"
+
+[node name="Star27" parent="Stars" instance=ExtResource( 1 )]
+position = Vector2( 1816, -384 )
+star_name = "Ceti "
+start_with_AI = true
+
+[node name="Camera2D" type="Camera2D" parent="." groups=[
+"camera",
+]]
+position = Vector2( 528, 292 )
+current = true
+zoom = Vector2( 2, 2 )
+limit_left = -1000
+limit_top = -800
+limit_right = 2200
+limit_bottom = 1500
+limit_smoothed = true
+editor_draw_limits = true
+script = ExtResource( 2 )
+
+[node name="Tween" type="Tween" parent="Camera2D"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+script = ExtResource( 6 )
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+visible = false
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -984.452
+margin_top = 12.7279
+margin_right = -940.452
+margin_bottom = 26.7279
+custom_colors/font_color = Color( 0.882813, 0.90625, 1, 1 )
+text = "fgfggffg"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Readout" type="Node2D" parent="CanvasLayer"]
+position = Vector2( 463.942, 149.531 )
+script = ExtResource( 7 )
+
+[node name="Sprite" type="Sprite" parent="CanvasLayer/Readout"]
+material = SubResource( 2 )
+position = Vector2( 71.4516, -61.7939 )
+scale = Vector2( 0.520361, 0.520361 )
+texture = ExtResource( 5 )
+region_enabled = true
+region_rect = Rect2( 1024, 256, 256, 256 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/Readout"]
+anims/swipe_in = SubResource( 3 )
+
+[node name="TargetName" type="RichTextLabel" parent="CanvasLayer/Readout"]
+margin_left = 48.0
+margin_top = -106.0
+margin_right = 231.0
+margin_bottom = -75.0
+mouse_filter = 2
+custom_fonts/normal_font = ExtResource( 8 )
+custom_colors/font_color_shadow = Color( 0.0588235, 0.0627451, 0.0784314, 1 )
+custom_constants/shadow_as_outline = 1
+text = "Name"
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Details" type="RichTextLabel" parent="CanvasLayer/Readout"]
+margin_left = 48.0
+margin_top = -81.0
+margin_right = 231.0
+margin_bottom = 107.0
+mouse_filter = 2
+custom_fonts/normal_font = ExtResource( 8 )
+custom_colors/font_color_shadow = Color( 0.0588235, 0.0627451, 0.0784314, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_constants/shadow_as_outline = 1
+text = "Details"
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SystemDetails" type="Control" parent="CanvasLayer"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -20.0
+margin_right = 20.0
+margin_bottom = 40.0
+script = ExtResource( 9 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StarName" type="Label" parent="CanvasLayer/SystemDetails"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -96.0
+margin_right = 96.0
+margin_bottom = 40.0
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.772549, 0.796078, 0.85098, 1 )
+text = "STAR NAME"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="CanvasLayer/SystemDetails"]
+position = Vector2( 20, 33.5 )
+scale = Vector2( 1, 0.539063 )
+texture = ExtResource( 5 )
+region_enabled = true
+region_rect = Rect2( 896, 256, 128, 128 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/SystemDetails"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -104.0
+margin_right = 108.0
+margin_bottom = 40.0
+custom_constants/separation = 73
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MetalText" type="Label" parent="CanvasLayer/SystemDetails/HBoxContainer"]
+margin_top = 9.0
+margin_right = 66.0
+margin_bottom = 30.0
+custom_fonts/font = ExtResource( 8 )
+custom_colors/font_color = Color( 0.776471, 0.796078, 0.854902, 1 )
+text = "Metal: 0"
+align = 1
+valign = 1
+
+[node name="EnergyText" type="Label" parent="CanvasLayer/SystemDetails/HBoxContainer"]
+margin_left = 139.0
+margin_top = 9.0
+margin_right = 212.0
+margin_bottom = 30.0
+custom_fonts/font = ExtResource( 8 )
+custom_colors/font_color = Color( 0.776471, 0.796078, 0.854902, 1 )
+text = "Energy: 0"
+align = 1
+valign = 1
+
+[node name="BuildMenu" type="Control" parent="CanvasLayer"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -512.0
+margin_right = 512.0
+script = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BuildLabel" type="Label" parent="CanvasLayer/BuildMenu"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -488.0
+margin_top = -192.0
+margin_right = -296.0
+margin_bottom = -152.0
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.772549, 0.796078, 0.85098, 1 )
+text = "BUILD/"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlanetBuild" type="Control" parent="CanvasLayer/BuildMenu"]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MinerIcon" type="Control" parent="CanvasLayer/BuildMenu/PlanetBuild"]
+margin_left = 32.0
+margin_top = -128.0
+margin_right = 112.0
+margin_bottom = -48.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NinePatchRect" type="AnimatedSprite" parent="CanvasLayer/BuildMenu/PlanetBuild/MinerIcon"]
+position = Vector2( 41, 41 )
+scale = Vector2( 0.762134, 0.762134 )
+frames = SubResource( 7 )
+frame = 1
+speed_scale = 0.6
+playing = true
+
+[node name="Sprite" type="Sprite" parent="CanvasLayer/BuildMenu/PlanetBuild/MinerIcon/NinePatchRect"]
+scale = Vector2( 0.75, 0.75 )
+texture = ExtResource( 5 )
+region_enabled = true
+region_rect = Rect2( 896, 640, 128, 128 )
+
+[node name="IconName" type="Label" parent="CanvasLayer/BuildMenu/PlanetBuild/MinerIcon"]
+margin_left = 3.0
+margin_top = -20.0
+margin_right = 94.0
+margin_bottom = 1.0
+rect_scale = Vector2( 0.9, 0.9 )
+custom_fonts/font = ExtResource( 8 )
+text = "Metal mine"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Cost" type="Label" parent="CanvasLayer/BuildMenu/PlanetBuild/MinerIcon"]
+margin_left = 3.0
+margin_top = 82.0
+margin_right = 94.0
+margin_bottom = 103.0
+rect_scale = Vector2( 0.9, 0.9 )
+custom_fonts/font = ExtResource( 8 )
+text = "Metal: 50
+Energy: 50"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SolarIcon" type="Control" parent="CanvasLayer/BuildMenu/PlanetBuild"]
+margin_left = 168.0
+margin_top = -128.0
+margin_right = 248.0
+margin_bottom = -48.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NinePatchRect" type="AnimatedSprite" parent="CanvasLayer/BuildMenu/PlanetBuild/SolarIcon"]
+position = Vector2( 41, 41 )
+scale = Vector2( 0.762134, 0.762134 )
+frames = SubResource( 7 )
+frame = 1
+speed_scale = 0.6
+playing = true
+
+[node name="Sprite" type="Sprite" parent="CanvasLayer/BuildMenu/PlanetBuild/SolarIcon/NinePatchRect"]
+scale = Vector2( 0.635551, 0.635551 )
+texture = ExtResource( 5 )
+region_enabled = true
+region_rect = Rect2( 1024, 640, 128, 128 )
+
+[node name="IconName" type="Label" parent="CanvasLayer/BuildMenu/PlanetBuild/SolarIcon"]
+margin_left = -4.0
+margin_top = -20.0
+margin_right = 107.0
+margin_bottom = 1.0
+rect_scale = Vector2( 0.9, 0.9 )
+custom_fonts/font = ExtResource( 8 )
+text = "Solar collector"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Cost" type="Label" parent="CanvasLayer/BuildMenu/PlanetBuild/SolarIcon"]
+margin_left = 3.0
+margin_top = 82.0
+margin_right = 94.0
+margin_bottom = 103.0
+rect_scale = Vector2( 0.9, 0.9 )
+custom_fonts/font = ExtResource( 8 )
+text = "Metal: 50
+Energy: 50"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ShipBuild" type="Control" parent="CanvasLayer/BuildMenu"]
+visible = false
+margin_top = -16.0
+margin_right = 40.0
+margin_bottom = 24.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScoutIcon" type="Control" parent="CanvasLayer/BuildMenu/ShipBuild"]
+margin_left = 37.0
+margin_top = -114.0
+margin_right = 117.0
+margin_bottom = -34.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NinePatchRect" type="AnimatedSprite" parent="CanvasLayer/BuildMenu/ShipBuild/ScoutIcon"]
+position = Vector2( 41, 41 )
+scale = Vector2( 0.762134, 0.762134 )
+frames = SubResource( 7 )
+speed_scale = 0.6
+playing = true
+
+[node name="Sprite" type="Sprite" parent="CanvasLayer/BuildMenu/ShipBuild/ScoutIcon/NinePatchRect"]
+scale = Vector2( 0.635551, 0.635551 )
+texture = ExtResource( 5 )
+region_enabled = true
+region_rect = Rect2( 896, 768, 128, 128 )
+
+[node name="IconName" type="Label" parent="CanvasLayer/BuildMenu/ShipBuild/ScoutIcon"]
+margin_left = 3.0
+margin_top = -20.0
+margin_right = 94.0
+margin_bottom = 1.0
+rect_scale = Vector2( 0.9, 0.9 )
+custom_fonts/font = ExtResource( 8 )
+text = "Scout Ship"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Cost" type="Label" parent="CanvasLayer/BuildMenu/ShipBuild/ScoutIcon"]
+margin_left = 3.0
+margin_top = 82.0
+margin_right = 94.0
+margin_bottom = 103.0
+rect_scale = Vector2( 0.9, 0.9 )
+custom_fonts/font = ExtResource( 8 )
+text = "Metal: 50
+Energy: 50"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BuilderIcon" type="Control" parent="CanvasLayer/BuildMenu/ShipBuild"]
+margin_left = 157.0
+margin_top = -114.0
+margin_right = 237.0
+margin_bottom = -34.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NinePatchRect" type="AnimatedSprite" parent="CanvasLayer/BuildMenu/ShipBuild/BuilderIcon"]
+position = Vector2( 41, 41 )
+scale = Vector2( 0.762134, 0.762134 )
+frames = SubResource( 7 )
+speed_scale = 0.6
+playing = true
+
+[node name="Sprite" type="Sprite" parent="CanvasLayer/BuildMenu/ShipBuild/BuilderIcon/NinePatchRect"]
+scale = Vector2( 0.635551, 0.635551 )
+texture = ExtResource( 5 )
+region_enabled = true
+region_rect = Rect2( 1024, 768, 128, 128 )
+
+[node name="IconName" type="Label" parent="CanvasLayer/BuildMenu/ShipBuild/BuilderIcon"]
+margin_left = -4.0
+margin_top = -20.0
+margin_right = 107.0
+margin_bottom = 1.0
+rect_scale = Vector2( 0.9, 0.9 )
+custom_fonts/font = ExtResource( 8 )
+text = "Builder Ship"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Cost" type="Label" parent="CanvasLayer/BuildMenu/ShipBuild/BuilderIcon"]
+margin_left = 3.0
+margin_top = 82.0
+margin_right = 94.0
+margin_bottom = 103.0
+rect_scale = Vector2( 0.9, 0.9 )
+custom_fonts/font = ExtResource( 8 )
+text = "Metal: 50
+Energy: 50"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FighterIcon" type="Control" parent="CanvasLayer/BuildMenu/ShipBuild"]
+margin_left = 277.0
+margin_top = -114.0
+margin_right = 357.0
+margin_bottom = -34.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NinePatchRect" type="AnimatedSprite" parent="CanvasLayer/BuildMenu/ShipBuild/FighterIcon"]
+position = Vector2( 41, 41 )
+scale = Vector2( 0.762134, 0.762134 )
+frames = SubResource( 7 )
+frame = 1
+speed_scale = 0.6
+playing = true
+
+[node name="Sprite" type="Sprite" parent="CanvasLayer/BuildMenu/ShipBuild/FighterIcon/NinePatchRect"]
+scale = Vector2( 0.635551, 0.635551 )
+texture = ExtResource( 5 )
+region_enabled = true
+region_rect = Rect2( 1152, 768, 128, 128 )
+
+[node name="IconName" type="Label" parent="CanvasLayer/BuildMenu/ShipBuild/FighterIcon"]
+margin_left = -4.0
+margin_top = -20.0
+margin_right = 107.0
+margin_bottom = 1.0
+rect_scale = Vector2( 0.9, 0.9 )
+custom_fonts/font = ExtResource( 8 )
+text = "Combat Ship"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Cost" type="Label" parent="CanvasLayer/BuildMenu/ShipBuild/FighterIcon"]
+margin_left = 3.0
+margin_top = 82.0
+margin_right = 94.0
+margin_bottom = 103.0
+rect_scale = Vector2( 0.9, 0.9 )
+custom_fonts/font = ExtResource( 8 )
+text = "Metal: 50
+Energy: 50"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InterstellarSelection" type="Control" parent="CanvasLayer"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -20.0
+margin_top = -40.0
+margin_right = 20.0
+mouse_filter = 1
+script = ExtResource( 12 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TitleLabel" type="Label" parent="CanvasLayer/InterstellarSelection"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -160.0
+margin_top = -40.0
+margin_right = 164.0
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.772549, 0.796078, 0.85098, 1 )
+text = "INTERSTELLAR TRAVEL"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SubtitleLabel" type="Label" parent="CanvasLayer/InterstellarSelection"]
+margin_left = -100.0
+margin_top = -8.0
+margin_right = 294.0
+margin_bottom = 60.0
+rect_scale = Vector2( 0.5, 0.5 )
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.772549, 0.796078, 0.85098, 1 )
+custom_constants/line_spacing = -4
+text = "Choose a star to send ship to."
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ErrorLabel" type="Label" parent="CanvasLayer/InterstellarSelection"]
+modulate = Color( 1, 1, 1, 0 )
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -160.0
+margin_top = -312.0
+margin_right = 168.0
+margin_bottom = -237.0
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.772549, 0.796078, 0.85098, 1 )
+text = "Must send a scout
+before anything else."
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/InterstellarSelection/ErrorLabel"]
+anims/Fade = SubResource( 8 )
+
+[node name="ErrorAlert" type="Label" parent="CanvasLayer"]
+modulate = Color( 1, 1, 1, 0 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -164.0
+margin_top = -37.5
+margin_right = 164.0
+margin_bottom = 37.5
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.772549, 0.796078, 0.85098, 1 )
+text = "Must send a scout
+before anything else."
+align = 1
+valign = 1
+script = ExtResource( 13 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/ErrorAlert"]
+anims/Fade = SubResource( 9 )
+
+[node name="Dialogue" type="Control" parent="CanvasLayer" groups=[
+"dialogue",
+]]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -208.0
+margin_top = -240.0
+script = ExtResource( 14 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer/Dialogue"]
+margin_left = -8.0
+margin_top = -8.0
+margin_right = 208.0
+margin_bottom = 248.0
+texture = ExtResource( 5 )
+region_rect = Rect2( 896, 512, 128, 128 )
+patch_margin_left = 24
+patch_margin_top = 28
+patch_margin_right = 30
+patch_margin_bottom = 33
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="NinePatchRect" parent="CanvasLayer/Dialogue/NinePatchRect"]
+show_behind_parent = true
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 200.0
+margin_bottom = 240.0
+texture = ExtResource( 3 )
+region_rect = Rect2( 136, 101, 258, 182 )
+patch_margin_left = 50
+patch_margin_top = 32
+patch_margin_right = 56
+patch_margin_bottom = 38
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Dialogue"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 16.0
+margin_top = 16.0
+margin_right = -24.0
+margin_bottom = -16.0
+custom_fonts/normal_font = SubResource( 10 )
+scroll_active = false
+scroll_following = true
+
+[node name="AudioAlert" type="AudioStreamPlayer2D" parent="CanvasLayer/Dialogue"]
+position = Vector2( -816, -360 )
+stream = ExtResource( 15 )
+
+[node name="Timer" type="Timer" parent="CanvasLayer/Dialogue"]
+
+[node name="BG" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="Background" type="Sprite" parent="BG"]
+show_behind_parent = true
+position = Vector2( 527.613, 293.471 )
+scale = Vector2( 2.13966, 1.62382 )
+z_index = -1
+texture = ExtResource( 3 )
+region_rect = Rect2( 448, 73, 57, 45 )
+__meta__ = {
+"_edit_lock_": true
+}

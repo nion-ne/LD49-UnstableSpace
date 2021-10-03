@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://GlobalData.gd" type="Script" id=1]
+
+[sub_resource type="Curve" id=1]
+min_value = 30.0
+max_value = 200.0
+_data = [ Vector2( 0, 196.909 ), 0.0, -131.364, 0, 1, Vector2( 1, 65.5455 ), -3.31866, 0.0, 0, 0 ]
+
+[node name="GlobalData" type="Node2D"]
+script = ExtResource( 1 )
+BRIGHTNESS_CURVE = SubResource( 1 )

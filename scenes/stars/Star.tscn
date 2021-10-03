@@ -1,0 +1,171 @@
+[gd_scene load_steps=23 format=2]
+
+[ext_resource path="res://scenes/stars/Star.gd" type="Script" id=2]
+[ext_resource path="res://scenes/stars/PlanetAnchor.gd" type="Script" id=3]
+[ext_resource path="res://assets/sheet.png" type="Texture" id=4]
+
+[sub_resource type="AtlasTexture" id=1]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 0, 0, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=2]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 128, 0, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=3]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 256, 0, 128, 128 )
+
+[sub_resource type="SpriteFrames" id=4]
+animations = [ {
+"frames": [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ) ],
+"loop": true,
+"name": "default",
+"speed": 3.0
+} ]
+
+[sub_resource type="AtlasTexture" id=5]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 0, 128, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=6]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 128, 128, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=7]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 256, 128, 128, 128 )
+
+[sub_resource type="SpriteFrames" id=8]
+animations = [ {
+"frames": [ SubResource( 5 ), SubResource( 6 ), SubResource( 7 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="CircleShape2D" id=9]
+radius = 64.4981
+
+[sub_resource type="AtlasTexture" id=10]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 384, 0, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=11]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 512, 0, 128, 128 )
+
+[sub_resource type="SpriteFrames" id=12]
+animations = [ {
+"frames": [ SubResource( 10 ), SubResource( 11 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="AtlasTexture" id=13]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 384, 0, 128, 128 )
+
+[sub_resource type="AtlasTexture" id=14]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 512, 0, 128, 128 )
+
+[sub_resource type="SpriteFrames" id=15]
+animations = [ {
+"frames": [ SubResource( 13 ), SubResource( 14 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="AtlasTexture" id=16]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 0, 512, 256, 256 )
+
+[sub_resource type="AtlasTexture" id=17]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 256, 512, 256, 256 )
+
+[sub_resource type="AtlasTexture" id=18]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 512, 512, 256, 256 )
+
+[sub_resource type="SpriteFrames" id=19]
+animations = [ {
+"frames": [ SubResource( 16 ), SubResource( 17 ), SubResource( 18 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[node name="Star" type="Node2D" groups=[
+"stars",
+]]
+script = ExtResource( 2 )
+
+[node name="BigSprite" type="AnimatedSprite" parent="."]
+visible = false
+scale = Vector2( 0.317578, 0.317578 )
+frames = SubResource( 4 )
+frame = 1
+playing = true
+
+[node name="SmallSprite" type="AnimatedSprite" parent="."]
+position = Vector2( -4.76837e-07, 0 )
+scale = Vector2( 0.374803, 0.374803 )
+frames = SubResource( 8 )
+playing = true
+offset = Vector2( 6, 0 )
+
+[node name="SelectionArea" type="Area2D" parent="."]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SelectionArea"]
+shape = SubResource( 9 )
+
+[node name="SelectionIndicator" type="AnimatedSprite" parent="."]
+visible = false
+scale = Vector2( 0.587224, 0.587224 )
+frames = SubResource( 12 )
+frame = 1
+playing = true
+
+[node name="PlanetAnchor" type="Node2D" parent="."]
+script = ExtResource( 3 )
+
+[node name="PlanetSelectionSprite" type="AnimatedSprite" parent="."]
+visible = false
+position = Vector2( -1.19209e-07, 48 )
+scale = Vector2( 0.289781, 0.289781 )
+frames = SubResource( 15 )
+playing = true
+
+[node name="Ships" type="Node2D" parent="."]
+
+[node name="Lines" type="Node2D" parent="."]
+
+[node name="Ownership" type="AnimatedSprite" parent="."]
+visible = false
+modulate = Color( 0.996078, 0.564706, 0.666667, 0.545098 )
+scale = Vector2( 0.525882, 0.525882 )
+frames = SubResource( 19 )
+speed_scale = 0.6
+playing = true
+
+[connection signal="input_event" from="SelectionArea" to="." method="_on_Area2D_input_event"]
