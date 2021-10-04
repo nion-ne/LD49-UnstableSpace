@@ -41,7 +41,7 @@ const WARP_SPEED_NORMAL = 20
 const WARP_SPEED_SCOUT = 10
 
 const AI_CONTROLLER = preload("res://scenes/AI/EnemyController.tscn")
-const AI_DECISION_TIME = 3
+const AI_DECISION_TIME = 5
 
 export(Curve) var BRIGHTNESS_CURVE = Curve.new()
 

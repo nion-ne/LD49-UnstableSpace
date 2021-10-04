@@ -42,7 +42,7 @@ func _process(delta):
 		if Input.is_action_just_pressed("right_mouse"):
 			var mouse_pos = get_global_mouse_position()
 			if currently_orbiting.global_position.distance_to(mouse_pos) < 250:
-				if target_vector != null:
+				if target_vector != null and is_instance_valid(target_vector):
 					target_vector.global_position = mouse_pos
 					target_vector.show()
 				else:
@@ -60,7 +60,7 @@ func _physics_process(delta):
 			
 			if global_position.distance_to(destination.global_position) < 5: 
 				emit_signal("arrived_to_destination")
-				if target_vector != null:
+				if target_vector != null and is_instance_valid(target_vector):
 					target_vector.hide()
 	#				print(target_vector)
 					current_status = STATUSES.IDLE
@@ -84,7 +84,7 @@ func set_orbiting(star):
 func select():
 	selected = true
 #	selection_sprite.show()
-	if currently_orbiting != null:
+	if currently_orbiting != null and is_instance_valid(currently_orbiting):
 		currently_orbiting.select_child(self)
 #		currently_orbiting.selected_child = null
 
@@ -100,7 +100,7 @@ func update_readout():
 
 func _on_Area2D_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.is_pressed():
-		if not selected and allow_selecting:
+		if not selected and allow_selecting and not interstellar and not is_in_group("enemy"):
 			select()
 
 func activate_FTL(star):
@@ -155,5 +155,8 @@ func deactivate_FTL():
 func damage(amount):
 	health -= amount
 	if health <= 0:
-		currently_orbiting.trigger_combat()
+		if currently_orbiting != null and is_instance_valid(currently_orbiting):
+			currently_orbiting.trigger_combat()
 		queue_free()
+		if currently_orbiting != null and is_instance_valid(currently_orbiting):
+			currently_orbiting.update_ownership()

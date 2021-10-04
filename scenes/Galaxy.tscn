@@ -429,7 +429,6 @@ __meta__ = {
 position = Vector2( 41, 41 )
 scale = Vector2( 0.762134, 0.762134 )
 frames = SubResource( 7 )
-frame = 1
 speed_scale = 0.6
 playing = true
 
@@ -477,7 +476,6 @@ __meta__ = {
 position = Vector2( 41, 41 )
 scale = Vector2( 0.762134, 0.762134 )
 frames = SubResource( 7 )
-frame = 1
 speed_scale = 0.6
 playing = true
 
@@ -534,6 +532,7 @@ __meta__ = {
 position = Vector2( 41, 41 )
 scale = Vector2( 0.762134, 0.762134 )
 frames = SubResource( 7 )
+frame = 1
 speed_scale = 0.6
 playing = true
 
@@ -581,6 +580,7 @@ __meta__ = {
 position = Vector2( 41, 41 )
 scale = Vector2( 0.762134, 0.762134 )
 frames = SubResource( 7 )
+frame = 1
 speed_scale = 0.6
 playing = true
 
@@ -628,7 +628,6 @@ __meta__ = {
 position = Vector2( 41, 41 )
 scale = Vector2( 0.762134, 0.762134 )
 frames = SubResource( 7 )
-frame = 1
 speed_scale = 0.6
 playing = true
 

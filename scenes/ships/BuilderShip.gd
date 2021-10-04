@@ -60,7 +60,7 @@ func _process(delta):
 			
 			var mouse_pos = get_global_mouse_position()
 			if currently_orbiting.global_position.distance_to(mouse_pos) < 200:
-				if target_vector != null:
+				if target_vector != null and is_instance_valid(target_vector):
 					target_vector.global_position = mouse_pos
 					target_vector.show()
 				else:
@@ -94,14 +94,14 @@ func _physics_process(delta):
 			
 		STATUSES.BUILDING:
 			progress.value = ((build_time - timer.time_left) / build_time) * 100.0
-			if destination != null and destination.is_in_group("planets"):
+			if destination != null and is_instance_valid(destination) and destination.is_in_group("planets"):
 				global_position = global_position.move_toward(destination.global_position, 10)
 		STATUSES.MOVING:
 			global_position = global_position.move_toward(destination.global_position, ship_speed)
 			
 			if global_position.distance_to(destination.global_position) < 5: 
 				emit_signal("arrived_to_destination")
-				if target_vector != null:
+				if target_vector != null and is_instance_valid(target_vector):
 					target_vector.hide()
 #					print(target_vector)
 					if destination.is_in_group("planets"):
@@ -201,18 +201,18 @@ func can_build(type):
 func select():
 	selected = true
 #	selection_sprite.show()
-	if currently_orbiting != null:
+	if currently_orbiting != null and is_instance_valid(currently_orbiting):
 		currently_orbiting.select_child(self)
 #		currently_orbiting.selected_child = null
 	
-	if currently_orbiting != null:
+	if currently_orbiting != null and is_instance_valid(currently_orbiting):
 		galaxy.canvas_layer.build_menu.activate(self)
 
 
 func unselect():
 	selected = false
 	selection_sprite.hide()
-	if target_vector != null:
+	if target_vector != null and is_instance_valid(target_vector):
 		target_vector.hide()
 
 func update_readout():
@@ -285,7 +285,7 @@ func _on_Area2D_input_event(viewport, event, shape_idx):
 	if interstellar:
 		return
 	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.is_pressed():
-		if not selected and allow_selecting:
+		if not selected and allow_selecting and not interstellar and not is_in_group("enemy"):
 			get_tree().set_input_as_handled()
 			select()
 
@@ -293,8 +293,11 @@ func _on_Area2D_input_event(viewport, event, shape_idx):
 func damage(amount):
 	health -= amount
 	if health <= 0:
-		currently_orbiting.trigger_combat()
+		if currently_orbiting != null and is_instance_valid(currently_orbiting):
+			currently_orbiting.trigger_combat()
 		queue_free()
+		if currently_orbiting != null and is_instance_valid(currently_orbiting):
+			currently_orbiting.update_ownership()
 
 func check_for_resting():
 	if not resting and current_status == STATUSES.IDLE:

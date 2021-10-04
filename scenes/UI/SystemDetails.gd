@@ -12,13 +12,13 @@ func _ready():
 	deactivate()
 
 func _process(delta):
-	if active and galaxy.active_star != null:
+	if active and galaxy.active_star != null and is_instance_valid(galaxy.active_star):
 		metal_text.text = "Metal: " + str(galaxy.active_star.metal).pad_decimals(0)
 		energy_text.text = "Energy: " + str(galaxy.active_star.energy).pad_decimals(0)
 		
 func activate():
 	active = true
-	if galaxy.active_star != null:
+	if galaxy.active_star != null and is_instance_valid(galaxy.active_star):
 		star_name.text = galaxy.active_star.star_name
 	show()
 	

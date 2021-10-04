@@ -42,7 +42,7 @@ func star_targeted(star):
 
 
 func deactivate():
-	if current_interstellar_child != null:
+	if current_interstellar_child != null and is_instance_valid(current_interstellar_child):
 		current_interstellar_child.unselect()
 	active = false
 	hide()

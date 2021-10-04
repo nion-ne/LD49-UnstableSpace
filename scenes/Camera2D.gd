@@ -23,11 +23,11 @@ func _process(delta):
 		pass
 	
 	debug_text = "Selected star: "
-	if galaxy.selected_star != null:
+	if galaxy.selected_star != null and is_instance_valid(galaxy.selected_star):
 		debug_text += galaxy.selected_star.name + "\n"
 		debug_text += "# planets: " + str(galaxy.selected_star.num_planets) + "\n"
 		
-		if galaxy.selected_star.selected_child != null:
+		if galaxy.selected_star.selected_child != null and is_instance_valid(galaxy.selected_star):
 			debug_text += "\nSelected child: " + galaxy.selected_star.selected_child.name
 	
 	debug_text += "\nzoom: " + str(zoom) + " \n"

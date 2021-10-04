@@ -94,7 +94,7 @@ func is_valid_option(icon, target):
 func on_icon_input_event(event, source):
 	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.is_pressed():
 		
-		if curr_target != null:
+		if curr_target != null and is_instance_valid(curr_target):
 			if is_valid_option(source, curr_target):
 
 				match source:

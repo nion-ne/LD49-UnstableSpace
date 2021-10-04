@@ -21,7 +21,7 @@ func _process(delta):
 		deactivate()
 		
 func _physics_process(delta):
-	if active and target != null:
+	if active and target != null and is_instance_valid(target):
 		target_name.percent_visible += (1.0 / target_name.text.length() * TEXT_SPEED / 2)
 		details.percent_visible += (1.0 / details.text.length() * TEXT_SPEED)
 

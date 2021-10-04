@@ -86,7 +86,7 @@ func _ready():
 		ownership.show()
 
 func select_child(target):
-	if selected_child != null:
+	if selected_child != null and is_instance_valid(selected_child):
 		selected_child.unselect()
 	selected_child = target
 	if not target.is_in_group("builders"):
@@ -95,7 +95,7 @@ func select_child(target):
 	galaxy.canvas_layer.readout.activate(selected_child)
 
 func unselect_child():
-	if selected_child != null:
+	if selected_child != null and is_instance_valid(selected_child):
 		selected_child.unselect()
 	selected_child = null
 
@@ -166,7 +166,7 @@ func deactivate():
 	planet_anchor.hide()
 	ships.hide()
 	
-	if selected_child != null and selected_child.is_in_group("ships"):
+	if selected_child != null and is_instance_valid(selected_child) and selected_child.is_in_group("ships"):
 		galaxy.set_interstellar_child(selected_child)
 	unselect_child()
 	galaxy.active_star = null

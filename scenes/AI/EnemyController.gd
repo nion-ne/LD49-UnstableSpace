@@ -43,11 +43,14 @@ func do_action():
 				current_state = STATES.MILITARY
 				decision_timer.start(0.1)
 				return
-			
-			if miners <= solars:
-				build_on_planet("miner")
 			else:
-				build_on_planet("solar")
+				if miners <= solars:
+					build_on_planet("miner")
+				else:
+					build_on_planet("solar")
+			
+			current_state = STATES.MILITARY
+			decision_timer.start(GlobalData.AI_DECISION_TIME)
 			
 				
 		STATES.MILITARY:
@@ -58,15 +61,18 @@ func do_action():
 			
 			if get_num_fighters() >= 3 and vacant_neighbours.empty():
 				current_state = STATES.SCOUT
-				decision_timer.start(0.1)
+				decision_timer.start(GlobalData.AI_DECISION_TIME)
 				return
-			elif not vacant_neighbours.empty():
+			elif get_num_fighters() >= 3 and not vacant_neighbours.empty():
 				current_state = STATES.SPREAD
-				decision_timer.start(0.1)
+				decision_timer.start(GlobalData.AI_DECISION_TIME)
 				return
 		
 			if active_builder.can_build("fighter"):
 				build_ship("fighter")
+				current_state = STATES.RESOURCES
+				decision_timer.start(GlobalData.AI_DECISION_TIME)
+				return
 			else:
 				decision_timer.start(GlobalData.AI_DECISION_TIME)
 				return
@@ -81,6 +87,8 @@ func do_action():
 				
 				if active_builder.can_build("scout"):
 					build_ship("scout")
+					decision_timer.start(GlobalData.AI_DECISION_TIME)
+					return
 				else:
 					decision_timer.start(GlobalData.AI_DECISION_TIME)
 					return
@@ -91,6 +99,8 @@ func do_action():
 			var neighbour = get_rand_neighbour()
 			if neighbour.owned_by == "player":
 				attack_target(neighbour)
+				current_state = STATES.RESOURCES
+				decision_timer.start(GlobalData.AI_DECISION_TIME)
 				return
 				
 			elif neighbour.owned_by == "enemy":
@@ -104,6 +114,7 @@ func do_action():
 				return
 			
 		STATES.SPREAD:
+
 			if not is_builder_available():
 				decision_timer.start(GlobalData.AI_DECISION_TIME)
 				return
@@ -117,6 +128,7 @@ func do_action():
 				new_builder.mission_active = true
 				new_builder.activate_FTL(vacant_neighbours.pop_front())
 				new_builder = null
+				print("SENDING BUILDER TO OTHER STAR")
 				current_state = STATES.RESOURCES
 				decision_timer.start(GlobalData.AI_DECISION_TIME)
 				return
@@ -126,17 +138,23 @@ func do_action():
 				build_ship("builder")
 				decision_timer.start(GlobalData.AI_DECISION_TIME)
 				return
+			else:
+				current_state = STATES.RESOURCES
+				decision_timer.start(0.1)
+				return
 
 func get_rand_neighbour():
 	var t = randi() % star.neighbor_stars.size()
 	return star.neighbor_stars[t]
 
 func scout_target(target):
-
+	print("SENDING SCOUT TO OTHER STAR")
 	var scout = star.get_ship_by_type("scouts", true)
 	scout.scout_mission = self
+	scout.activate_FTL(target)
 
 func attack_target(target):
+	print("ATTACKING TO OTHER STAR")
 	star.get_ship_by_type("fighters", true).activate_FTL(target)
 	star.get_ship_by_type("fighters", true).activate_FTL(target)
 		
