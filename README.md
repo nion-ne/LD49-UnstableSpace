@@ -1,5 +1,5 @@
 # UnstableSpace
 
-This place is not a place of honor... no highly esteemed deed is commemorated here... nothing valued is here.
+Ludum Dare 49 entry.
 
-This place is best shunned and left uninhabited.
+Written in 48 hours
